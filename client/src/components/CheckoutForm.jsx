@@ -51,7 +51,7 @@ const CheckoutForm = () => {
 
       if (data.error) {
         console.error(data.error);
-        alert(data.error);
+        alert(`Error: ${data.error}`);
       } else {
         alert("¡Pago realizado con éxito!");
         elements.getElement(CardElement).clear();
