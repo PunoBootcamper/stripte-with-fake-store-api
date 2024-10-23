@@ -20,7 +20,7 @@ const CheckoutForm = () => {
       const { data } = await axios.post(
         import.meta.env.VITE_API_URL + "/create-payment-intent",
         {
-          amount: total * 100,
+          amount: parseInt(total * 100),
           currency: "usd",
           email,
           name,
