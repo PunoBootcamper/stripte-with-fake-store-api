@@ -25,7 +25,7 @@ Detalle de compra
 Pago
 ![alt text](image-2.png)
 
-Mensahe de apgo procesado
+Mensaje de pago procesado
 ![alt text](image-3.png)
 
 ## Estructura del Proyecto
