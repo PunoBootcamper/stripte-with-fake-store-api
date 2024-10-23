@@ -12,6 +12,22 @@ Este proyecto es una aplicación de carrito de compras full-stack que se integra
 - Integración de pagos usando Stripe.
 - Gestión persistente de usuarios y transacciones con Prisma.
 
+
+## Capturas
+
+Tienda
+![alt text](image.png)
+
+
+Detalle de compra
+![alt text](image-1.png)
+
+Pago
+![alt text](image-2.png)
+
+Mensahe de apgo procesado
+![alt text](image-3.png)
+
 ## Estructura del Proyecto
 
 ```
