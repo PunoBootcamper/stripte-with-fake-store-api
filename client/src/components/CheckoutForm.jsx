@@ -17,38 +17,50 @@ const CheckoutForm = () => {
     setLoading(true);
 
     try {
-      const { data } = await axios.post(
-        import.meta.env.VITE_API_URL + "/create-payment-intent",
-        {
-          amount: total * 100,
-          currency: "usd",
-          email,
+      const card = elements.getElement(CardElement);
+
+      const { paymentMethod, error } = await stripe.createPaymentMethod({
+        type: "card",
+        card,
+        billing_details: {
           name,
-        }
-      );
-
-      const clientSecret = data.clientSecret;
-
-      // Confirm the PaymentIntent on the client
-      const { error } = await stripe.confirmCardPayment(clientSecret, {
-        payment_method: {
-          card: elements.getElement(CardElement),
-          billing_details: { name, email },
+          email,
         },
       });
 
       if (error) {
         console.error(error);
         alert(error.message);
+        setLoading(false);
+        return;
+      }
+
+      const payload = {
+        amount: parseInt(total * 100),
+        paymentMethodId: paymentMethod.id,
+        email,
+        name,
+      };
+
+      const response = await axios.post(
+        `${import.meta.env.VITE_API_URL}/create-payment-intent`,
+        payload
+      );
+
+      const data = response.data;
+
+      if (data.error) {
+        console.error(data.error);
+        alert(`Error: ${data.error}`);
       } else {
-        alert("Payment successful!");
+        alert("¡Pago realizado con éxito!");
         elements.getElement(CardElement).clear();
         setEmail("");
         setName("");
       }
     } catch (error) {
       console.error("Error:", error);
-      alert("Payment failed!");
+      alert("¡El pago ha fallado!");
     }
 
     setLoading(false);
@@ -59,10 +71,14 @@ const CheckoutForm = () => {
       className="p-6 w-96 bg-white rounded shadow-md"
       onSubmit={handleSubmit}
     >
-      <h3 className="text-center text-xl font-bold mb-4">Price: ${total}</h3>
+      <h3 className="text-center text-xl font-bold mb-4">
+        Precio: ${total}
+      </h3>
 
       <div className="mb-4">
-        <label className="block text-sm font-medium text-gray-700">Email</label>
+        <label className="block text-sm font-medium text-gray-700">
+          Email
+        </label>
         <input
           type="email"
           value={email}
@@ -73,7 +89,9 @@ const CheckoutForm = () => {
       </div>
 
       <div className="mb-4">
-        <label className="block text-sm font-medium text-gray-700">Name</label>
+        <label className="block text-sm font-medium text-gray-700">
+          Nombre
+        </label>
         <input
           type="text"
           value={name}
@@ -128,7 +146,7 @@ const CheckoutForm = () => {
             ></path>
           </svg>
         ) : (
-          "Buy"
+          "Comprar"
         )}
       </button>
     </form>
