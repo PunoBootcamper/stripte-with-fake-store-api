@@ -34,6 +34,17 @@ app.post("/create-payment-intent", async (req: Request, res: Response) => {
         },
       });
     }
+
+    // Create a payment intent
+    await prisma.transaction.create({
+      data: {
+        amount,
+        currency,
+        status: "pending",
+        userId: user.id,
+      },
+    });
+
     const paymentIntent = await stripe.paymentIntents.create({
       amount,
       currency,
@@ -46,7 +57,7 @@ app.post("/create-payment-intent", async (req: Request, res: Response) => {
   }
 });
 
-const PORT = process.env.PORT || 4000;
+const PORT = 5000;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
